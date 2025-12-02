@@ -1,103 +1,81 @@
 ﻿class No
 {
-    public int Valor { get; set; }
-
-    public No? Proximo
-    {
-        get { return proximo; }
-        set { proximo = value; }
-    }
-
-    private No? proximo = null;
+    public int Valor {get; set;}
+    public No? Proximo {get; set;}
 }
 
 class ListaEncadeada
 {
     private No? primeiro = null;
+    private No? ultimo = null;
+    private int quantidade = 0;
 
-    public No? Primeiro
+    public void Adicionar(int valor)
     {
-        get
-        {
-            return primeiro;
-        }
-    }
+        No novo = new No {Valor = valor};
 
-    public void AdicionarNoInicio(int valor)
-    {
-        No novo = new No { Valor = valor };
-        if (primeiro == null)
+        if(primeiro == null)
         {
             primeiro = novo;
+            ultimo = novo;
+        }else if (valor%2==0){
+            ultimo!.Proximo = novo;
+            ultimo = novo;
         }else{
             novo.Proximo = primeiro;
             primeiro = novo;
         }
+
+        quantidade++;
     }
 
-    public void AdicionarNoFinal(int valor)
-    {
-        No novo = new No { Valor = valor };
-        if (primeiro == null)
-        {
-            primeiro = novo;
-        }else{
-            No? aux = primeiro;
-            while (aux!.Proximo != null)
-            {
-                aux = aux.Proximo;
-            }
-            aux.Proximo = novo;
-        }
-    }
-
-    public void RemoverInicio()
+    public void Remover()
     {
         if (primeiro == null)
-        {
             throw new Exception("Lista vazia!");
-        }
-        primeiro = primeiro.Proximo;
-    }
 
-    public void RemoverFinal()
-    {
-        if (primeiro == null)
+        if (primeiro.Valor % 2 == 0)
         {
-            throw new Exception("Lista vazia");
-        }
+            primeiro = primeiro.Proximo;
 
-        if (primeiro.Proximo == null)
-        {
-            primeiro = null;
+            if (primeiro == null)
+            {
+                ultimo = null;
+            }
         }else{
-            No? aux = primeiro;
-
-            while (aux!.Proximo!.Proximo != null)
+            if (primeiro.Proximo == null)
             {
-                aux = aux.Proximo;
-            }
+                primeiro = null;
+                ultimo = null;
+            }else{
+                No aux = primeiro;
 
-            aux.Proximo = null;
+                while (aux.Proximo!.Proximo != null)
+                {
+                    aux = aux.Proximo;
+                }
+
+                aux.Proximo = null;
+                ultimo = aux;
+            }
         }
+
+        quantidade--;
     }
 
-    public bool SaoIguais(ListaEncadeada outraLista)
+    public int Quantidade
     {
-        No? atual1 = this.Primeiro;
-        No? atual2 = outraLista.Primeiro;
-
-        while (atual1 != null && atual2 != null)
-        {
-            if (atual1.Valor != atual2.Valor)
-            {
-                return false;
-            }
-
-            atual1 = atual1.Proximo;
-            atual2 = atual2.Proximo;
-        }
-
-        return atual1 == null && atual2 == null;
+        get { return quantidade; }
     }
+
+    public No? Ultimo
+    {
+        get { return ultimo; }
+    }
+
+    public No? Primeiro
+    {
+        get { return primeiro; }
+    }
+
 }
